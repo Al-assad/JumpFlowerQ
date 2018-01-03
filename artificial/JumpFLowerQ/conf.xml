@@ -1,6 +1,6 @@
 <conf>
     <adb-path>C:\Al-assad\bin_dev\ADB\adb.exe</adb-path><!-- ADB 本地地址 -->
-    <magic-number>1.43</magic-number><!-- 微调比例，移动长度/按压时间 -->
+    <magic-number>1.40</magic-number><!-- 微调比例，移动长度/按压时间 -->
     <internal-time>900</internal-time><!-- ADB 截图间隔 -->
     <frame-height>1000</frame-height><!-- 窗口高度 -->
 </conf>

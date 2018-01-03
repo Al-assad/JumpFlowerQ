@@ -19,7 +19,7 @@ public class Configure {
 
 
     /** 按压时间和距离计算参数*/
-    public static double MAGIC_NUMBER = 1.43;
+    public static double MAGIC_NUMBER = 1.40;
 
     /** 显示图片缩放高度*/
     public  static int SCREEN_HEIGHT = 1000;

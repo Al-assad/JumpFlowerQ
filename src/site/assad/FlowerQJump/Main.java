@@ -98,10 +98,7 @@ public class Main extends JFrame{
         return newImage;
     }
 
-    //计算2点之间的距离
-    private double getDistance(Point a,Point b){
-        return Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) + (a.getY() - b.getY()) * (a.getY() - b.getY()));
-    }
+
 
 
 
@@ -146,11 +143,12 @@ public class Main extends JFrame{
 
         //TODO: 图形参数保存到Configure中
         //绘制参数
-        public final int pointWidth = 20;
-        public final int pointHeight = 14;
-        public final Color pointColor = Color.RED;
-        public final Color lineColor = Color.RED;
-        public final double angle = 0;   //俯角
+        private final int pointWidth = 20;
+        private final int pointHeight = 14;
+        private final Color pointColor = Color.RED;
+        private final Color correctColor = Color.GREEN;
+        private final double standardAngle = 30;   //俯角
+        private final double deviation = 0.9;  //误差允许
 
 
 
@@ -170,7 +168,7 @@ public class Main extends JFrame{
                     }else{
                         secondPoint.setLocation(e.getX(),e.getY());
 
-                        double resizeDistance = getDistance(firstPoint,secondPoint);
+                        double resizeDistance = CalculateUtils.getDistance(firstPoint,secondPoint);
                         int realDistance =(int)( resizeDistance * realHeight / resizeHeight);
 
                         //计算按压时间
@@ -213,11 +211,14 @@ public class Main extends JFrame{
             g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
             if(firstPoint.x != 0 && firstPoint.y != 0 ){
                 if(next){
+                    //当角度误差正确时，以correctColor绘制当前点和连线
+                    if(CalculateUtils.checkDeviation(firstPoint,curPoint,standardAngle,deviation)){
+                        g.setColor(correctColor);
+                        g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
+                    }
                     g.fillOval(firstPoint.x - pointWidth/2,firstPoint.y - pointHeight/2,pointWidth,pointHeight);
-                    g.setColor(lineColor);
                     g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
                 }
-
 
             }
         }
