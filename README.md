@@ -37,7 +37,7 @@ adb pull <remoteFilename> <localPath>  # 将手机屏幕截图推送到PC指定�
 * 锤子手机，需要关闭“大爆炸功能”  
 
 ## 开发环境  
-IntellIDEA，JDK-1.8  
+Intellij IDEA，JDK-1.8  
   
 
 
