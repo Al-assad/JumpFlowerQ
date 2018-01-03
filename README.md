@@ -3,7 +3,10 @@
 ---  
 
 ## 程序截图
-<img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/artificial/JumpFLowerQ/Screenshot.png" width="400"/><br />
+<img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/artificial/JumpFLowerQ/Screenshot.png" width="400"/>
+<span width="40" />
+<img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/Screenshot.png" width="400"><br />
+
 
 ## 原理
 使用ADB进行进行调试，以一定的间隔对手机进行截屏，并返回PC，使用Swing组件绘制该截图，在该截图上通过鼠标点击获取距离，在计算为屏幕长按时间，由ADB发送该屏幕点击事件到手机；
