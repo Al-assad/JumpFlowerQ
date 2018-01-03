@@ -229,6 +229,13 @@ public class Main extends JFrame{
                         g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
                     }
 
+                }else{
+                    Point[] borders = CalculateUtils.getBorderPoint(curPoint,standardAngle,resizeWidth);
+                    g.setColor(datumColor);
+                    g.drawLine(borders[0].x,borders[0].y,borders[2].x,borders[2].y);
+                    g.drawLine(borders[1].x,borders[1].y,borders[3].x,borders[3].y);
+                    g.setColor(pointColor);
+                    g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
                 }
 
             }
