@@ -3,8 +3,10 @@ package site.assad.FlowerQJump;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,16 +33,12 @@ public class Main extends JFrame{
 
     //图像视图
     private JPanel imagePanel;
-
-    //点对象
-    private Point firstPoint = new Point(0,0);
-    private Point secondPoint = new Point(0,0);
+    //操作面板
+    private JPanel operationPanel;
 
     //绘制图片地址
     private final String imagePath = AdbCaller.getScreenLocalPath();
 
-    //一个流程中的点击累计
-    private boolean next = false;
 
 
     public Main(){
@@ -58,83 +56,26 @@ public class Main extends JFrame{
         initScreenshotSize();
         this.setSize(resizeWidth,resizeHeight);
 
-        //初始化绘制面板
-        imagePanel = new JPanel(){
-            protected void paintComponent(Graphics g){
-                super.paintComponent(g);
+        imagePanel = new ImagePanel();
+        operationPanel = new OperationPanel();
 
-                BufferedImage image = null;
-                try {
-                    image = ImageIO.read(new File(imagePath));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                BufferedImage resizeImage = zoomInImage(image,resizeWidth,resizeHeight);
-                g.drawImage(resizeImage,0,0,resizeImage.getWidth(),resizeImage.getHeight(),null);
+        //面板组装
+        Container content = this.getContentPane();
+        content.setLayout(null);
 
-            }
-        };
-
-        this.add(imagePanel);
-
-        //添加绘制面板事件
-        imagePanel.addMouseListener(new MouseListener(){
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                //获取两个点，并计算实际距离
-                if(!next){
-                    firstPoint.setLocation(e.getX(),e.getY());
-                    next = !next;
-                }else{
-                    secondPoint.setLocation(e.getX(),e.getY());
-
-                    double resizeDistance = getDistance(firstPoint,secondPoint);
-                    int realDistance =(int)( resizeDistance * realHeight / resizeHeight);
-
-                    //计算按压时间
-                    int pressMills = (int) (realDistance * Configure.MAGIC_NUMBER);
-
-                    //adb 操作：发送长按事件、重新获取截图
-                    AdbCaller.screenPress(pressMills);
-                    AdbCaller.printScreen();
-
-                    //重新刷新组件
-                    imagePanel.validate();
-                    imagePanel.repaint();
-
-                    //打印调试信息
-                    System.out.println(e.getX()+" "+e.getY());
-                    System.out.println(firstPoint+" "+secondPoint+" "+realDistance + "step " + pressMills + "ms");
-
-                    next = !next;
-                }
-
-
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-
-
+        content.add(operationPanel);
+        content.add(imagePanel);
     }
 
 
+    public static void main(String[] args){
+        JFrame main = new Main();
+        main.setTitle("跳一跳，花Q！ -- by Al-assad");
+        main.setLocationRelativeTo(null);
+        main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        main.setResizable(false);
+        main.setVisible(true);
+    }
 
     //初始化截图实际的尺寸和缩放尺寸
     private void initScreenshotSize(){
@@ -163,13 +104,130 @@ public class Main extends JFrame{
     }
 
 
-    public static void main(String[] args){
-        JFrame main = new Main();
-        main.setTitle("跳一跳，花Q！ -- by Al-assad");
-        main.setLocationRelativeTo(null);
-        main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        main.setVisible(true);
+
+
+    /**
+     * 绘制面板类
+     * */
+    class ImagePanel extends JPanel{
+
+        public ImagePanel(){
+            this.setBounds(0,0,resizeWidth,resizeHeight);
+        }
+
+        //绘制截图
+        protected void paintComponent(Graphics g){
+            super.paintComponent(g);
+
+            BufferedImage image = null;
+            try {
+                image = ImageIO.read(new File(imagePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            BufferedImage resizeImage = zoomInImage(image,resizeWidth,resizeHeight);
+            g.drawImage(resizeImage,0,0,resizeImage.getWidth(),resizeImage.getHeight(),null);
+        }
     }
+
+
+    /**
+     * 操作面板类
+     * */
+    class OperationPanel extends JPanel{
+
+        //点对象
+        private Point firstPoint = new Point(0,0);
+        private Point secondPoint = new Point(0,0);
+        private Point curPoint = new Point(firstPoint.x,firstPoint.y);
+
+        //一个流程中的点击累计
+        private boolean next = false;
+
+        //TODO: 图形参数保存到Configure中
+        //绘制参数
+        public final int pointWidth = 20;
+        public final int pointHeight = 14;
+        public final Color pointColor = Color.RED;
+        public final Color lineColor = Color.RED;
+        public final double angle = 0;   //俯角
+
+
+
+        public OperationPanel(){
+
+            this.setBounds(0,0,resizeWidth,resizeHeight);
+            this.setOpaque(false);  //设置该面板背景透明
+
+            //操作面板添加事件监听器
+            this.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    //获取两个点，并计算实际距离
+                    if(!next){
+                        firstPoint.setLocation(e.getX(),e.getY());
+                        next = !next;
+                    }else{
+                        secondPoint.setLocation(e.getX(),e.getY());
+
+                        double resizeDistance = getDistance(firstPoint,secondPoint);
+                        int realDistance =(int)( resizeDistance * realHeight / resizeHeight);
+
+                        //计算按压时间
+                        int pressMills = (int) (realDistance * Configure.MAGIC_NUMBER);
+
+                        //adb 操作：发送长按事件、重新获取截图
+                        AdbCaller.screenPress(pressMills);
+                        AdbCaller.printScreen();
+
+                        //重新刷新组件
+                        imagePanel.validate();
+                        imagePanel.repaint();
+
+                        //打印调试信息
+                        System.out.println("current["+e.getX()+","+e.getY()+"] "
+                                + "first:["+firstPoint.x+","+firstPoint.y+"] "
+                                + "second:["+secondPoint.x+","+secondPoint.y+"] "
+                                + "realDistance:" + realDistance + "px "
+                                + "pressMills:"+pressMills + "ms");
+
+                        next = !next;
+                    }
+                }
+            });
+            this.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    curPoint.setLocation(e.getX(),e.getY());
+                    validate();
+                    repaint();
+                }
+            });
+
+        }
+
+        //辅助标识绘制
+        protected void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(pointColor);
+            g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
+            if(firstPoint.x != 0 && firstPoint.y != 0 ){
+                if(next){
+                    g.fillOval(firstPoint.x - pointWidth/2,firstPoint.y - pointHeight/2,pointWidth,pointHeight);
+                    g.setColor(lineColor);
+                    g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
+                }
+
+
+            }
+        }
+
+
+
+
+    }
+
+
 
 
 
