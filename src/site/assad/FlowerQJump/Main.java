@@ -147,8 +147,9 @@ public class Main extends JFrame{
         private final int pointHeight = 14;
         private final Color pointColor = Color.RED;
         private final Color correctColor = Color.GREEN;
+        private final Color datumColor = Color.BLUE;
         private final double standardAngle = 30;   //俯角
-        private final double deviation = 0.9;  //误差允许
+        private final double deviation = 0.8;  //误差允许
 
 
 
@@ -211,13 +212,24 @@ public class Main extends JFrame{
             g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
             if(firstPoint.x != 0 && firstPoint.y != 0 ){
                 if(next){
+                    //绘制俯角基准线
+                    Point[] borders = CalculateUtils.getBorderPoint(firstPoint,standardAngle,resizeWidth);
+                    g.setColor(datumColor);
+                    g.drawLine(borders[0].x,borders[0].y,borders[2].x,borders[2].y);
+                    g.drawLine(borders[1].x,borders[1].y,borders[3].x,borders[3].y);
+
                     //当角度误差正确时，以correctColor绘制当前点和连线
                     if(CalculateUtils.checkDeviation(firstPoint,curPoint,standardAngle,deviation)){
                         g.setColor(correctColor);
                         g.fillOval(curPoint.x - pointWidth/2,curPoint.y - pointHeight/2,pointWidth,pointHeight);
+                        g.fillOval(firstPoint.x - pointWidth/2,firstPoint.y - pointHeight/2,pointWidth,pointHeight);
+                        g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
+                    }else{
+                        g.setColor(pointColor);
+                        g.fillOval(firstPoint.x - pointWidth/2,firstPoint.y - pointHeight/2,pointWidth,pointHeight);
+                        g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
                     }
-                    g.fillOval(firstPoint.x - pointWidth/2,firstPoint.y - pointHeight/2,pointWidth,pointHeight);
-                    g.drawLine(firstPoint.x,firstPoint.y,curPoint.x,curPoint.y);
+
                 }
 
             }
