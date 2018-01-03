@@ -4,6 +4,8 @@ package site.assad.FlowerQJump;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
+
 
 /**
  * Author: Al-assad 余林颖
@@ -19,13 +21,27 @@ public class AdbCaller {
 
     private static String screenRemotePath = Configure.SCREENSHOT_REMOTE_PATH;
 
+    private static int borderY = Configure.SCREEN_HEIGHT;
+    private static int borderX = borderY / 2;
+
+    private static final int GAP = 100;
+
 
     /**
      * 调用 adb 长按屏幕
      *  @param timeMilli 长按时间
      * */
     public static void screenPress(double timeMilli){
-        String command = adbPath + " shell input touchscreen swipe 233 250 233 250 "+ (int)timeMilli;
+        //假如屏幕随机位置点击
+        int x = 255;
+        int y = 200;
+        Random random = new Random();
+        x += (random.nextBoolean() ? -1 : 1) * random.nextInt(GAP);
+        y += (random.nextBoolean() ? -1 : 1) * random.nextInt(GAP);
+        x = (x > 0 && x < borderX) ? x : 255;
+        y = (y > 0 && y < borderY) ? x : 200;
+
+        String command = adbPath + " shell input touchscreen swipe "+ x +" "+ y +" "+ x + " " + y + " " + (int)timeMilli;
         try {
             Process process = Runtime.getRuntime().exec(command);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
