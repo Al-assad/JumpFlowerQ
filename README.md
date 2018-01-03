@@ -1,5 +1,6 @@
-# PlayJumpJumpWithMouse  
-在PC上使用鼠标点击的方式进行微信小游戏“跳一跳”    
+# JumpFlowerQ    
+在PC上使用鼠标点击的方式进行微信小游戏“跳一跳”  
+
 ---  
 
 ## 程序截图
