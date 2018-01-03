@@ -143,14 +143,13 @@ public class Main extends JFrame{
 
         //TODO: 图形参数保存到Configure中
         //绘制参数
-        private final int pointWidth = 20;
-        private final int pointHeight = 14;
-        private final Color pointColor = Color.RED;
-        private final Color correctColor = Color.GREEN;
-        private final Color datumColor = Color.BLUE;
-        private final double standardAngle = 30;   //俯角
-        private final double deviation = 0.8;  //误差允许
-
+        private final int pointWidth = Configure.POINT_WIDTH;
+        private final int pointHeight = Configure.POINT_HEIGHT;
+        private final Color pointColor = Configure.POINT_COLOR;
+        private final Color correctColor = Configure.CORRECT_COLOR;
+        private final Color datumColor = Configure.DATUM_COLOR;
+        private final double standardAngle = Configure.STANDARD_ANGLE;
+        private final double deviation = Configure.DEVIATION;
 
 
         public OperationPanel(){
