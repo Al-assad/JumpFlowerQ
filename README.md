@@ -3,9 +3,11 @@
 ---  
 
 ## 程序截图
+<span>
 <img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/artificial/JumpFLowerQ/Screenshot.png" width="400"/>
 <span width="40" />
 <img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/Screenshot.png" width="400"><br />
+</span>
 
 
 ## 原理
