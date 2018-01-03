@@ -2,7 +2,9 @@
 在PC上使用鼠标点击的方式进行微信小游戏“跳一跳”  
 
 ---  
-
+  
+    
+   
 ## 程序截图
 <img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/artificial/JumpFLowerQ/Screenshot.png" width="400"/>
 <img src="https://raw.githubusercontent.com/Al-assad/JumpFlowerQ/master/Screenshot.png" width="400"><br />
